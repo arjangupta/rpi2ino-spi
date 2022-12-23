@@ -24,7 +24,7 @@ void setup() {
   // Initialize helper vars
   received_spi_data = false;
   spi_byte = 0x0;
-  print_counter = 0;
+  print_counter = 500;
 }
 
 // SPI interrupt routine
@@ -38,7 +38,7 @@ ISR (SPI_STC_vect)
 
 void loop () 
 {
-  if (print_counter == 25) {
+  if (print_counter == 500) {
     Serial.print("Running SPI Peripheral program.\n");
     print_counter = 0;
   }
