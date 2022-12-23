@@ -3,6 +3,13 @@
 // SPI peripheral code used from 
 // https://roboticsbackend.com/raspberry-pi-master-arduino-uno-slave-spi-communication-with-wiringpi/
 
+namespace
+{
+  bool received_spi_data = false;
+  byte spi_byte = 0x0;
+  int print_counter = 0;
+} // anonymous namespace
+
 void setup() {
   // have to send on master in, *slave out*
   pinMode(MISO, OUTPUT);
@@ -13,16 +20,21 @@ void setup() {
 
   // Print setup
   Serial.begin(9600);
+
+  // Initialize helper vars
+  received_spi_data = false;
+  spi_byte = 0x0;
+  print_counter = 0;
 }
 
 // SPI interrupt routine
 ISR (SPI_STC_vect)
 {
   byte c = SPDR;
-  SPDR = c+10;
+  received_spi_data = true;
+  spi_byte = c;
 }  // end of interrupt service routine (ISR) for SPI
 
-int print_counter = 0;
 
 void loop () 
 {
@@ -32,6 +44,13 @@ void loop ()
   }
   else {
     ++print_counter;
+  }
+  if (received_spi_data) {
+    Serial.print("We received a byte over SPI: ");
+    Serial.print(spi_byte, HEX); // print out byte in hex
+    Serial.print("\n");
+    // Reset flag
+    received_spi_data = false;
   }
   delay(200);
 }
