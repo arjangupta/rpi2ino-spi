@@ -46,9 +46,7 @@ void loop ()
     ++print_counter;
   }
   if (received_spi_data) {
-    Serial.print("We received a byte over SPI: ");
-    Serial.print(spi_byte, HEX); // print out byte in hex
-    Serial.print("\n");
+    Serial.println("We received a byte over SPI.");
     // Reset flag
     received_spi_data = false;
   }
